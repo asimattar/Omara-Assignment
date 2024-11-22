@@ -1,0 +1,74 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100vh; /* Ensure the body takes full viewport height */
+  display: flex;
+  flex-direction: column;
+}
+
+.App {
+  text-align: center;
+  margin: 20px;
+  height: 100%; /* Full height of the container */
+  display: flex;
+  flex-direction: column;
+}
+
+.table {
+  width: 100%;
+  overflow-x: hidden; /* Hide horizontal overflow */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.header, .row {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+.header {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  padding: 10px 0;
+  border-bottom: 2px solid #ccc; 
+}
+
+.row {
+  padding: 12px 10px; 
+  border-bottom: 1px solid #ddd; 
+  background-color: #fff; 
+}
+
+.row:nth-child(even) {
+  background-color: #f9f9f9; 
+}
+
+.cell {
+  flex: 1;
+  padding: 10px;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  border-right: 1px solid #ddd; 
+}
+
+.cell:last-child {
+  border-right: none; 
+}
+
+.list {
+  flex-grow: 1; /* Allow this container to take up all remaining vertical space */
+  overflow-y: auto; /* Vertical scroll enabled for rows */
+  height: 100%; /* Take up the full height available */
+  display: flex;
+  flex-direction: column;
+}
+
+.loading {
+  text-align: center;
+  margin: 20px 0;
+}

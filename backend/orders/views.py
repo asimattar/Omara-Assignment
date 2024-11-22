@@ -1,31 +1,38 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Order
-from .serializers import OrderSerializer
 
 class OrdersView(APIView):
     def get(self, request):
-        cursor = request.query_params.get('cursor')
-        limit = int(request.query_params.get('limit', 50))
-        sort = request.query_params.get('sort', 'created_at')
-        sort_direction = request.query_params.get('sortDirection', 'asc')
+        limit = int(request.GET.get('limit', 50))
+        cursor = request.GET.get('cursor')
 
+        # Base query
         query = Order.objects.all()
+
+        # If a cursor is provided, filter results
         if cursor:
             query = query.filter(id__gt=cursor)
 
-        if sort_direction == 'desc':
-            sort = f"-{sort}"
+        # Get the next cursor before slicing
+        next_cursor = query.order_by('id').last().id if query.exists() else None
 
-        query = query.order_by(sort)[:limit]
+        # Apply slicing
+        query = query[:limit]
 
-        orders = OrderSerializer(query, many=True).data
-        next_cursor = query.last().id if query.exists() else None
-
-        total_count = Order.objects.count()
+        # Serialize and return the response
+        data = [
+            {
+                'id': order.id,
+                'customerName': order.customer_name,
+                'orderAmount': float(order.order_amount),
+                'status': order.status,
+                'createdAt': order.created_at.isoformat(),
+            }
+            for order in query
+        ]
 
         return Response({
-            'data': orders,
+            'data': data,
             'nextCursor': next_cursor,
-            'totalCount': total_count,
         })
